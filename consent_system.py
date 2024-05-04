@@ -1,21 +1,31 @@
 class ConsentSystem:
     """
-    Manages consent interactions to ensure attendees are fully informed about how their biometric data will be handled.
-    Responds to the need for robust consent mechanisms as highlighted in expert discussions and supports adaptive governance
-    by providing clear, compliant, and trustworthy consent management. This system now includes more detailed consent
-    information, granular options, and a straightforward process for consent withdrawal, reflecting both regulatory
-    requirements and ethical considerations for biometric data use.
+    Oversees consent exchanges to guarantee that participants are completely aware of the uses and handling of 
+    their biometric data. Complies with the recommendations of experts regarding the necessity for strong consent 
+    procedures and facilitates adaptive governance by offering a transparent, reliable, and compliant consent 
+    management system. This system now reflects both legal requirements and ethical considerations for the use 
+    of biometric data, including more precise consent information and an easy-to-use withdrawl mechanism.
     """
     def __init__(self, database):
+        """
+        Initializes the consent system with a reference to the database for attendee data storage.
+        
+        :param database: An instance of the Database class for attendee data management.
+        """
         self.database = database
 
     def request_consent(self, attendee_info):
         """
         Explicitly request and record attendee consent, providing detailed information about the use, storage,
         protection, and retention of facial recognition data. Offers granular consent options to attendees.
+        
+        :param attendee_info: Dictionary containing attendee information, including ID and name.
+        :return: None
         """
-        print("Your facial data will be used for secure event entry and will be stored securely. You can withdraw your consent at any time.")
-        print("Details: Data will be used solely for event security purposes and will be deleted 30 days post-event unless otherwise required by law.")
+        print("""Your facial data will be used for secure event entry and will be stored securely. You can 
+              withdraw your consent at any time.""")
+        print("""Details: Data will be used solely for event security purposes and will be deleted 30 days 
+              post-event unless otherwise required by law.""")
         consent_given = input("Do you consent to this specific use of your facial data? (yes/no): ")
         if consent_given.lower() == 'yes':
             attendee_info['consent'] = {'given': True, 'details': 'Facial data use for event entry'}
@@ -29,6 +39,9 @@ class ConsentSystem:
         """
         Ensure that all data use complies with local regulations and the specific consent provided by the attendee.
         Checks both the existence and specifics of consent to ensure full compliance.
+        
+        :param attendee_id: Unique identifier for the attendee.
+        :return: Boolean indicating compliance status.
         """
         data = self.database.retrieve_attendee_data(attendee_id)
         return data and data.get('consent', {}).get('given', False)
@@ -37,6 +50,9 @@ class ConsentSystem:
         """
         Allows attendees to easily withdraw their consent, ensuring compliance with privacy laws and ethical standards.
         Outlines the immediate effects of withdrawing consent, including data deletion where applicable.
+        
+        :param attendee_id: Unique identifier for the attendee.
+        :return: None
         """
         data = self.database.retrieve_attendee_data(attendee_id)
         if data and data.get('consent', {}).get('given', False):
